@@ -1,0 +1,341 @@
+cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Detector IoT Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a1628;
+      color: #ffffff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 20px 0 10px;
+      border-bottom: 2px solid #1e3a5f;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #4fc3f7;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Info bar */
+    .info-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0d2137;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .info-item {
+      font-size: 0.95rem;
+      color: #90caf9;
+    }
+
+    .info-item span {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4caf50;
+      margin-right: 6px;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Gas value cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #0d2137;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .card-label {
+      font-size: 0.85rem;
+      color: #90caf9;
+      margin-bottom: 6px;
+    }
+
+    .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-unit {
+      font-size: 0.8rem;
+      color: #90caf9;
+    }
+
+    .co2-color  { color: #ef5350; }
+    .ch4-color  { color: #ffa726; }
+    .h2s-color  { color: #ab47bc; }
+    .o2-color   { color: #66bb6a; }
+
+    /* Charts */
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .chart-box {
+      background: #0d2137;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #4fc3f7;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 200px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #546e7a;
+      font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .cards  { grid-template-columns: repeat(2, 1fr); }
+      .charts { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Design and Development of a Portable Gas Detector Using IoT System</h1>
+  </div>
+
+  <!-- Info Bar -->
+  <div class="info-bar">
+    <div class="info-item">
+      <span class="status-dot"></span> Live
+    </div>
+    <div class="info-item">Date & Time: <span id="datetime">—</span></div>
+    <div class="info-item">Battery: <span id="battery">—</span> %</div>
+    <div class="info-item">อัปเดตล่าสุด: <span id="lastUpdate">—</span></div>
+  </div>
+
+  <!-- Value Cards -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Carbon Dioxide</div>
+      <div class="card-value co2-color" id="val-co2">—</div>
+      <div class="card-unit">%Vol</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Methane</div>
+      <div class="card-value ch4-color" id="val-ch4">—</div>
+      <div class="card-unit">%Vol</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Hydrogen Sulfide</div>
+      <div class="card-value h2s-color" id="val-h2s">—</div>
+      <div class="card-unit">ppm</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Oxygen</div>
+      <div class="card-value o2-color" id="val-o2">—</div>
+      <div class="card-unit">%Vol</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts">
+    <div class="chart-box">
+      <div class="chart-title">CO₂ (%Vol)</div>
+      <div class="chart-container"><canvas id="chart-co2"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">CH₄ (%Vol)</div>
+      <div class="chart-container"><canvas id="chart-ch4"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">H₂S (ppm)</div>
+      <div class="chart-container"><canvas id="chart-h2s"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">O₂ (%Vol)</div>
+      <div class="chart-container"><canvas id="chart-o2"></canvas></div>
+    </div>
+  </div>
+
+  <div class="footer">ข้อมูลอัปเดตทุก 1 นาที • ดึงข้อมูลจาก Google Sheets</div>
+
+<script>
+  // ================================================
+  //  การตั้งค่า
+  // ================================================
+  const SPREADSHEET_ID = "16lFYOvIhPT90Wczu20U86xIO5CJmb4qv1laLp96Tg9M";
+  const SHEET_NAME     = "Sheet2";
+  const MAX_POINTS     = 20;   // จำนวนจุดบนกราฟสูงสุด
+  const REFRESH_MS     = 60000; // อัปเดตทุก 1 นาที
+
+  const API_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+
+  // ================================================
+  //  สร้างกราฟ
+  // ================================================
+  function makeChart(id, color) {
+    return new Chart(document.getElementById(id), {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          borderColor: color,
+          backgroundColor: color + "22",
+          borderWidth: 2,
+          pointRadius: 3,
+          tension: 0.3,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            ticks: { color: "#90caf9", maxRotation: 45, font: { size: 10 } },
+            grid:  { color: "#1e3a5f" }
+          },
+          y: {
+            ticks: { color: "#90caf9", font: { size: 10 } },
+            grid:  { color: "#1e3a5f" }
+          }
+        }
+      }
+    });
+  }
+
+  const charts = {
+    co2: makeChart("chart-co2", "#ef5350"),
+    ch4: makeChart("chart-ch4", "#ffa726"),
+    h2s: makeChart("chart-h2s", "#ab47bc"),
+    o2:  makeChart("chart-o2",  "#66bb6a"),
+  };
+
+  // ================================================
+  //  อัปเดตกราฟ
+  // ================================================
+  function updateChart(chart, label, value) {
+    chart.data.labels.push(label);
+    chart.data.datasets[0].data.push(value);
+    if (chart.data.labels.length > MAX_POINTS) {
+      chart.data.labels.shift();
+      chart.data.datasets[0].data.shift();
+    }
+    chart.update();
+  }
+
+  // ================================================
+  //  ดึงข้อมูลจาก Google Sheets
+  // ================================================
+  async function fetchData() {
+    try {
+      const res  = await fetch(API_URL);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+      const rows = json.table.rows;
+
+      if (!rows || rows.length === 0) return;
+
+      // ดึงแถวล่าสุด
+      const last = rows[rows.length - 1].c;
+
+      // A=Epoch, B=CO2, C=CH4, D=H2S, E=O2, F=Battery
+      const epoch   = last[0]?.v || 0;
+      const co2     = parseFloat(last[1]?.v || 0).toFixed(2);
+      const ch4     = parseFloat(last[2]?.v || 0).toFixed(2);
+      const h2s     = parseFloat(last[3]?.v || 0).toFixed(2);
+      const o2      = parseFloat(last[4]?.v || 0).toFixed(2);
+      const battery = last[5]?.v || "—";
+
+      // แปลง Epoch → เวลาไทย UTC+7
+      const date = new Date((epoch + 7 * 3600) * 1000);
+      const timeStr = date.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+      const dateStr = date.toLocaleDateString("th-TH");
+
+      // อัปเดต UI
+      document.getElementById("val-co2").textContent = co2;
+      document.getElementById("val-ch4").textContent = ch4;
+      document.getElementById("val-h2s").textContent = h2s;
+      document.getElementById("val-o2").textContent  = o2;
+      document.getElementById("battery").textContent = battery;
+      document.getElementById("datetime").textContent = `${dateStr} ${timeStr}`;
+      document.getElementById("lastUpdate").textContent = new Date().toLocaleTimeString("th-TH");
+
+      // อัปเดตกราฟ
+      updateChart(charts.co2, timeStr, co2);
+      updateChart(charts.ch4, timeStr, ch4);
+      updateChart(charts.h2s, timeStr, h2s);
+      updateChart(charts.o2,  timeStr, o2);
+
+    } catch (err) {
+      console.error("ดึงข้อมูลไม่สำเร็จ:", err);
+    }
+  }
+
+  // เริ่มทำงาน
+  fetchData();
+  setInterval(fetchData, REFRESH_MS);
+</script>
+
+</body>
+</html>
+ENDOFFILE
