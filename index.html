@@ -1,4 +1,3 @@
-cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -17,7 +16,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       padding: 20px;
     }
 
-    /* Header */
     .header {
       text-align: center;
       padding: 20px 0 10px;
@@ -33,7 +31,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       text-transform: uppercase;
     }
 
-    /* Info bar */
     .info-bar {
       display: flex;
       justify-content: space-between;
@@ -47,20 +44,12 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       gap: 10px;
     }
 
-    .info-item {
-      font-size: 0.95rem;
-      color: #90caf9;
-    }
-
-    .info-item span {
-      color: #ffffff;
-      font-weight: 600;
-    }
+    .info-item { font-size: 0.95rem; color: #90caf9; }
+    .info-item span { color: #ffffff; font-weight: 600; }
 
     .status-dot {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       border-radius: 50%;
       background: #4caf50;
       margin-right: 6px;
@@ -72,7 +61,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       50% { opacity: 0.3; }
     }
 
-    /* Gas value cards */
     .cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -88,29 +76,15 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       text-align: center;
     }
 
-    .card-label {
-      font-size: 0.85rem;
-      color: #90caf9;
-      margin-bottom: 6px;
-    }
+    .card-label { font-size: 0.85rem; color: #90caf9; margin-bottom: 6px; }
+    .card-value { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .card-unit  { font-size: 0.8rem; color: #90caf9; }
 
-    .card-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+    .co2-color { color: #ef5350; }
+    .ch4-color { color: #ffa726; }
+    .h2s-color { color: #ab47bc; }
+    .o2-color  { color: #66bb6a; }
 
-    .card-unit {
-      font-size: 0.8rem;
-      color: #90caf9;
-    }
-
-    .co2-color  { color: #ef5350; }
-    .ch4-color  { color: #ffa726; }
-    .h2s-color  { color: #ab47bc; }
-    .o2-color   { color: #66bb6a; }
-
-    /* Charts */
     .charts {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -132,12 +106,8 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       text-align: center;
     }
 
-    .chart-container {
-      position: relative;
-      height: 200px;
-    }
+    .chart-container { position: relative; height: 200px; }
 
-    /* Footer */
     .footer {
       text-align: center;
       margin-top: 20px;
@@ -145,7 +115,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       font-size: 0.8rem;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       .cards  { grid-template-columns: repeat(2, 1fr); }
       .charts { grid-template-columns: 1fr; }
@@ -155,22 +124,17 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
 </head>
 <body>
 
-  <!-- Header -->
   <div class="header">
     <h1>Design and Development of a Portable Gas Detector Using IoT System</h1>
   </div>
 
-  <!-- Info Bar -->
   <div class="info-bar">
-    <div class="info-item">
-      <span class="status-dot"></span> Live
-    </div>
+    <div class="info-item"><span class="status-dot"></span> Live</div>
     <div class="info-item">Date & Time: <span id="datetime">—</span></div>
     <div class="info-item">Battery: <span id="battery">—</span> %</div>
     <div class="info-item">อัปเดตล่าสุด: <span id="lastUpdate">—</span></div>
   </div>
 
-  <!-- Value Cards -->
   <div class="cards">
     <div class="card">
       <div class="card-label">Carbon Dioxide</div>
@@ -194,7 +158,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
     </div>
   </div>
 
-  <!-- Charts -->
   <div class="charts">
     <div class="chart-box">
       <div class="chart-title">CO₂ (%Vol)</div>
@@ -217,20 +180,14 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
   <div class="footer">ข้อมูลอัปเดตทุก 1 นาที • ดึงข้อมูลจาก Google Sheets</div>
 
 <script>
-  // ================================================
-  //  การตั้งค่า
-  // ================================================
   const SPREADSHEET_ID = "16lFYOvIhPT90Wczu20U86xIO5CJmb4qv1laLp96Tg9M";
   const SHEET_NAME     = "Sheet2";
-  const MAX_POINTS     = 20;   // จำนวนจุดบนกราฟสูงสุด
-  const REFRESH_MS     = 60000; // อัปเดตทุก 1 นาที
+  const MAX_POINTS     = 20;
+  const REFRESH_MS     = 60000;
 
   const API_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
-  // ================================================
-  //  สร้างกราฟ
-  // ================================================
-  function makeChart(id, color) {
+  function makeChart(id, color, minY, maxY, stepSize) {
     return new Chart(document.getElementById(id), {
       type: "line",
       data: {
@@ -255,8 +212,14 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
             grid:  { color: "#1e3a5f" }
           },
           y: {
-            ticks: { color: "#90caf9", font: { size: 10 } },
-            grid:  { color: "#1e3a5f" }
+            min: minY,
+            max: maxY,
+            ticks: {
+              color: "#90caf9",
+              font: { size: 10 },
+              stepSize: stepSize
+            },
+            grid: { color: "#1e3a5f" }
           }
         }
       }
@@ -264,15 +227,12 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
   }
 
   const charts = {
-    co2: makeChart("chart-co2", "#ef5350"),
-    ch4: makeChart("chart-ch4", "#ffa726"),
-    h2s: makeChart("chart-h2s", "#ab47bc"),
-    o2:  makeChart("chart-o2",  "#66bb6a"),
+    co2: makeChart("chart-co2", "#ef5350",  0,   5, 1),
+    ch4: makeChart("chart-ch4", "#ffa726",  0,   5, 1),
+    h2s: makeChart("chart-h2s", "#ab47bc",  0, 100, 20),
+    o2:  makeChart("chart-o2",  "#66bb6a",  0,  25, 5),
   };
 
-  // ================================================
-  //  อัปเดตกราฟ
-  // ================================================
   function updateChart(chart, label, value) {
     chart.data.labels.push(label);
     chart.data.datasets[0].data.push(value);
@@ -283,9 +243,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
     chart.update();
   }
 
-  // ================================================
-  //  ดึงข้อมูลจาก Google Sheets
-  // ================================================
   async function fetchData() {
     try {
       const res  = await fetch(API_URL);
@@ -295,7 +252,6 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
 
       if (!rows || rows.length === 0) return;
 
-      // ดึงแถวล่าสุด
       const last = rows[rows.length - 1].c;
 
       // A=Epoch, B=CO2, C=CH4, D=H2S, E=O2, F=Battery
@@ -306,21 +262,19 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
       const o2      = parseFloat(last[4]?.v || 0).toFixed(2);
       const battery = last[5]?.v || "—";
 
-      // แปลง Epoch → เวลาไทย UTC+7
-      const date = new Date((epoch + 7 * 3600) * 1000);
-      const timeStr = date.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
-      const dateStr = date.toLocaleDateString("th-TH");
+      // แปลง Epoch → เวลาไทย (ไม่บวก UTC+7 ซ้ำ)
+      const date    = new Date(epoch * 1000);
+      const timeStr = date.toLocaleTimeString("th-TH",  { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+      const dateStr = date.toLocaleDateString("th-TH",  { timeZone: "Asia/Bangkok" });
 
-      // อัปเดต UI
-      document.getElementById("val-co2").textContent = co2;
-      document.getElementById("val-ch4").textContent = ch4;
-      document.getElementById("val-h2s").textContent = h2s;
-      document.getElementById("val-o2").textContent  = o2;
-      document.getElementById("battery").textContent = battery;
+      document.getElementById("val-co2").textContent  = co2;
+      document.getElementById("val-ch4").textContent  = ch4;
+      document.getElementById("val-h2s").textContent  = h2s;
+      document.getElementById("val-o2").textContent   = o2;
+      document.getElementById("battery").textContent  = battery;
       document.getElementById("datetime").textContent = `${dateStr} ${timeStr}`;
-      document.getElementById("lastUpdate").textContent = new Date().toLocaleTimeString("th-TH");
+      document.getElementById("lastUpdate").textContent = new Date().toLocaleTimeString("th-TH", { timeZone: "Asia/Bangkok" });
 
-      // อัปเดตกราฟ
       updateChart(charts.co2, timeStr, co2);
       updateChart(charts.ch4, timeStr, ch4);
       updateChart(charts.h2s, timeStr, h2s);
@@ -331,11 +285,9 @@ cat > /mnt/user-data/outputs/index.html << 'ENDOFFILE'
     }
   }
 
-  // เริ่มทำงาน
   fetchData();
   setInterval(fetchData, REFRESH_MS);
 </script>
 
 </body>
 </html>
-ENDOFFILE
