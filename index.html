@@ -17,10 +17,24 @@
     }
 
     .header {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 20px 0 10px;
       border-bottom: 2px solid #1e3a5f;
       margin-bottom: 20px;
+    }
+
+    .header-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+
+    .header-title {
+      text-align: center;
+      flex: 1;
+      padding: 0 16px;
     }
 
     .header h1 {
@@ -30,6 +44,7 @@
       letter-spacing: 1px;
       text-transform: uppercase;
     }
+
 
     .info-bar {
       display: flex;
@@ -125,7 +140,11 @@
 <body>
 
   <div class="header">
-    <h1>Design and Development of a Portable Gas Detector Using IoT System</h1>
+    <img src="Ruts Logo.png" alt="University Logo" class="header-logo">
+    <div class="header-title">
+      <h1>Design and Development of a Portable Gas Detector Using IoT System</h1>
+    </div>
+    <img src="Petroleum Logo.png" alt="Petroleum Logo" class="header-logo">
   </div>
 
   <div class="info-bar">
