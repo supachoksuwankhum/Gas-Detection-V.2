@@ -9,159 +9,125 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      background: #0a1628;
-      color: #ffffff;
-      font-family: 'Segoe UI', Arial, sans-serif;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
-      padding: 4px 10px;
-      display: flex;
-      flex-direction: column;
+      background: #0a1628;
+      color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
 
     .wrapper {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      padding: 6px 10px;
       gap: 4px;
     }
 
+    /* Header */
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 2px 0;
       border-bottom: 2px solid #1e3a5f;
-      margin-bottom: 2px;
+      padding-bottom: 4px;
     }
-
-    .header-logo {
-      width: 55px;
-      height: 55px;
-      object-fit: contain;
-    }
-
-    .header-title {
-      text-align: center;
-      flex: 1;
-      padding: 0 16px;
-    }
-
+    .header-logo { width: 55px; height: 55px; object-fit: contain; }
+    .header-title { text-align: center; flex: 1; padding: 0 10px; }
     .header h1 {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #4fc3f7;
-      letter-spacing: 1px;
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-
+    /* Info bar */
     .info-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #0d2137;
       border: 1px solid #1e3a5f;
-      border-radius: 8px;
-      padding: 4px 16px;
-      margin-bottom: 2px;
-      flex-wrap: wrap;
-      gap: 6px;
+      border-radius: 6px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      color: #90caf9;
     }
-
-    .info-item { font-size: 0.8rem; color: #90caf9; }
-    .info-item span { color: #ffffff; font-weight: 600; }
-
+    .info-bar span { color: #fff; font-weight: 600; }
     .status-dot {
       display: inline-block;
-      width: 10px; height: 10px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: #4caf50;
-      margin-right: 6px;
+      margin-right: 5px;
       animation: blink 1.5s infinite;
     }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
+    /* Cards */
     .cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-bottom: 2px;
+      gap: 4px;
     }
-
     .card {
       background: #0d2137;
       border: 1px solid #1e3a5f;
-      border-radius: 8px;
-      padding: 4px;
+      border-radius: 6px;
+      padding: 5px 8px;
       text-align: center;
     }
-
-    .card-label { font-size: 0.65rem; color: #90caf9; margin-bottom: 1px; }
-    .card-value { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
+    .card-label { font-size: 0.65rem; color: #90caf9; }
+    .card-value { font-size: 1.2rem; font-weight: 700; }
     .card-unit  { font-size: 0.6rem; color: #90caf9; }
-
     .co2-color { color: #ef5350; }
     .ch4-color { color: #ffa726; }
     .h2s-color { color: #ab47bc; }
     .o2-color  { color: #66bb6a; }
 
+    /* Charts */
     .charts {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
       gap: 4px;
+      min-height: 0;
     }
-
     .chart-box {
       background: #0d2137;
       border: 1px solid #1e3a5f;
-      border-radius: 8px;
-      padding: 4px;
+      border-radius: 6px;
+      padding: 4px 6px;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
-
     .chart-title {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: #4fc3f7;
-      margin-bottom: 2px;
       text-align: center;
+      margin-bottom: 2px;
     }
-
-    .chart-container { position: relative; height: 100%; min-height: 0; }
-
-    .charts {
+    .chart-container {
+      position: relative;
       flex: 1;
       min-height: 0;
     }
 
-    .chart-box {
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-
+    /* Footer */
     .footer {
       text-align: center;
-      margin-top: 4px;
       color: #546e7a;
-      font-size: 0.7rem;
-    }
-
-    @media (max-width: 768px) {
-      .cards  { grid-template-columns: repeat(2, 1fr); }
-      .charts { grid-template-columns: 1fr; }
-      .header h1 { font-size: 1.1rem; }
+      font-size: 0.6rem;
     }
   </style>
 </head>
 <body>
 <div class="wrapper">
+
   <div class="header">
     <img src="Ruts Logo.png" alt="University Logo" class="header-logo">
     <div class="header-title">
@@ -171,10 +137,10 @@
   </div>
 
   <div class="info-bar">
-    <div class="info-item"><span class="status-dot"></span> Live</div>
-    <div class="info-item">Date & Time: <span id="datetime">—</span></div>
-    <div class="info-item">Battery: <span id="battery">—</span> %</div>
-    <div class="info-item">อัปเดตล่าสุด: <span id="lastUpdate">—</span></div>
+    <div><span class="status-dot"></span> Live</div>
+    <div>Date & Time: <span id="datetime">—</span></div>
+    <div>Battery: <span id="battery">—</span> %</div>
+    <div>อัปเดตล่าสุด: <span id="lastUpdate">—</span></div>
   </div>
 
   <div class="cards">
@@ -220,6 +186,7 @@
   </div>
 
   <div class="footer">ข้อมูลอัปเดตทุก 1 นาที • ดึงข้อมูลจาก Google Sheets</div>
+
 </div>
 
 <script>
@@ -227,7 +194,6 @@
   const SHEET_NAME     = "Sheet2";
   const MAX_POINTS     = 10;
   const REFRESH_MS     = 60000;
-
   const API_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
   function makeChart(id, color, minY, maxY, stepSize) {
@@ -251,17 +217,12 @@
         plugins: { legend: { display: false } },
         scales: {
           x: {
-            ticks: { color: "#90caf9", maxRotation: 45, font: { size: 10 } },
+            ticks: { color: "#90caf9", maxRotation: 0, font: { size: 9 } },
             grid:  { color: "#1e3a5f" }
           },
           y: {
-            min: minY,
-            max: maxY,
-            ticks: {
-              color: "#90caf9",
-              font: { size: 10 },
-              stepSize: stepSize
-            },
+            min: minY, max: maxY,
+            ticks: { color: "#90caf9", font: { size: 9 }, stepSize: stepSize },
             grid: { color: "#1e3a5f" }
           }
         }
@@ -270,10 +231,10 @@
   }
 
   const charts = {
-    co2: makeChart("chart-co2", "#ef5350",  0,   5, 1),
+    co2: makeChart("chart-co2", "#ef5350",  0,   5,  1),
     ch4: makeChart("chart-ch4", "#ffa726",  0, 100, 20),
     h2s: makeChart("chart-h2s", "#ab47bc",  0, 100, 20),
-    o2:  makeChart("chart-o2",  "#66bb6a",  0,  25, 5),
+    o2:  makeChart("chart-o2",  "#66bb6a",  0,  25,  5),
   };
 
   function updateChart(chart, label, value) {
@@ -292,12 +253,9 @@
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
       const rows = json.table.rows;
-
       if (!rows || rows.length === 0) return;
 
-      const last = rows[rows.length - 1].c;
-
-      // A=Epoch, B=CO2, C=CH4, D=H2S, E=O2, F=Battery
+      const last    = rows[rows.length - 1].c;
       const epoch   = last[0]?.v || 0;
       const co2     = parseFloat(last[1]?.v || 0).toFixed(2);
       const ch4     = parseFloat(last[2]?.v || 0).toFixed(2);
@@ -305,17 +263,16 @@
       const o2      = parseFloat(last[4]?.v || 0).toFixed(2);
       const battery = last[5]?.v || "—";
 
-      // แปลง Epoch → เวลาไทย (ไม่บวก UTC+7 ซ้ำ)
       const date    = new Date(epoch * 1000);
-      const timeStr = date.toLocaleTimeString("th-TH",  { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
-      const dateStr = date.toLocaleDateString("th-TH",  { timeZone: "Asia/Bangkok" });
+      const timeStr = date.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+      const dateStr = date.toLocaleDateString("th-TH", { timeZone: "Asia/Bangkok" });
 
-      document.getElementById("val-co2").textContent  = co2;
-      document.getElementById("val-ch4").textContent  = ch4;
-      document.getElementById("val-h2s").textContent  = h2s;
-      document.getElementById("val-o2").textContent   = o2;
-      document.getElementById("battery").textContent  = battery;
-      document.getElementById("datetime").textContent = `${dateStr} ${timeStr}`;
+      document.getElementById("val-co2").textContent    = co2;
+      document.getElementById("val-ch4").textContent    = ch4;
+      document.getElementById("val-h2s").textContent    = h2s;
+      document.getElementById("val-o2").textContent     = o2;
+      document.getElementById("battery").textContent    = battery;
+      document.getElementById("datetime").textContent   = `${dateStr} ${timeStr}`;
       document.getElementById("lastUpdate").textContent = new Date().toLocaleTimeString("th-TH", { timeZone: "Asia/Bangkok" });
 
       updateChart(charts.co2, timeStr, co2);
@@ -331,6 +288,5 @@
   fetchData();
   setInterval(fetchData, REFRESH_MS);
 </script>
-
 </body>
 </html>
