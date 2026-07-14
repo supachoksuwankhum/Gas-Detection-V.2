@@ -14,7 +14,16 @@
       font-family: 'Segoe UI', Arial, sans-serif;
       height: 100vh;
       overflow: hidden;
-      padding: 8px 16px;
+      padding: 6px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 4px;
     }
 
     .header {
@@ -112,6 +121,8 @@
       border: 1px solid #1e3a5f;
       border-radius: 8px;
       padding: 8px;
+      display: flex;
+      flex-direction: column;
     }
 
     .chart-title {
@@ -122,7 +133,18 @@
       text-align: center;
     }
 
-    .chart-container { position: relative; height: calc((100vh - 280px) / 2); }
+    .chart-container { position: relative; height: 100%; min-height: 0; }
+
+    .charts {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .chart-box {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
 
     .footer {
       text-align: center;
@@ -139,7 +161,7 @@
   </style>
 </head>
 <body>
-
+<div class="wrapper">
   <div class="header">
     <img src="Ruts Logo.png" alt="University Logo" class="header-logo">
     <div class="header-title">
@@ -198,6 +220,7 @@
   </div>
 
   <div class="footer">ข้อมูลอัปเดตทุก 1 นาที • ดึงข้อมูลจาก Google Sheets</div>
+</div>
 
 <script>
   const SPREADSHEET_ID = "16lFYOvIhPT90Wczu20U86xIO5CJmb4qv1laLp96Tg9M";
